@@ -1,0 +1,18 @@
+def configProject(p, buildDir) {
+  p.buildDir = "${buildDir}/${p.name}"
+    p.subprojects { s ->
+      configProject(s, "${p.buildDir}")
+    }
+}
+
+def buildDir = System.env.GRADLE_GLOBAL_BUILD_PATH
+if (!buildDir?.trim()) {
+  buildDir = "build"
+}
+
+gradle.projectsLoaded {
+  if (ext.has("group")) {
+    buildDir += "/${ext.group}"
+  }
+  configProject(rootProject, buildDir)
+}
