@@ -21,19 +21,16 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := gradle-prebuilt
 LOCAL_IS_HOST_MODULE := true
+LOCAL_PREBUILT_MODULE_FILE := $(TOPDIR)tools/external/gradle/gradle-$(GRADLE_VERSION)-bin.zip
 
-LOCAL_SRC_FILES := $(LOCAL_MODULE)
-LOCAL_REPO_FILE := $(TOPDIR)tools/external/gradle/gradle-$(GRADLE_VERSION)-bin.zip
-LOCAL_MODULE_CLASS := FAKE
+LOCAL_ADDITIONAL_DEPENDENCIES := $(PRODUCT_OUT)/.gradle/init.gradle \
+	$(HOST_OUT)/gradle-$(GRADLE_VERSION)/bin/gradle
 
 $(PRODUCT_OUT)/.gradle/init.gradle: $(LOCAL_PATH)/init.gradle
 	install -d $(PRODUCT_OUT)/.gradle
 	install $(TOP_DIR)prebuilts/gradle/init.gradle $(PRODUCT_OUT)/.gradle/init.gradle
 
-$(HOST_OUT)/gradle-$(GRADLE_VERSION): $(LOCAL_REPO_FILE)
-	unzip $< -d $(HOST_OUT)
+$(HOST_OUT)/gradle-$(GRADLE_VERSION)/bin/gradle: $(LOCAL_PREBUILT_MODULE_FILE)
+	unzip -DD $< -d $(HOST_OUT)
 
-$(LOCAL_PATH)/$(LOCAL_MODULE): $(HOST_OUT)/gradle-$(GRADLE_VERSION) $(PRODUCT_OUT)/.gradle/init.gradle
-	touch $@
-
-include $(BUILD_PREBUILT)
+include $(BUILD_PHONY_PACKAGE)
