@@ -34,3 +34,8 @@ $(HOST_OUT)/gradle-$(GRADLE_VERSION)/bin/gradle: $(LOCAL_PREBUILT_MODULE_FILE)
 	unzip -f -u -DD $< -d $(HOST_OUT)
 
 include $(BUILD_PHONY_PACKAGE)
+
+PACKAGE_URL := https://services.gradle.org/distributions
+
+$(TOPDIR)tools/external/gradle/gradle-$(GRADLE_VERSION)-bin.zip:
+	wget '$(PACKAGE_URL)/gradle-$(GRADLE_VERSION)-bin.zip' -O '$@'
