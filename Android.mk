@@ -31,6 +31,6 @@ $(PRODUCT_OUT)/.gradle/init.gradle: $(LOCAL_PATH)/init.gradle
 	install $(TOP_DIR)prebuilts/gradle/init.gradle $(PRODUCT_OUT)/.gradle/init.gradle
 
 $(HOST_OUT)/gradle-$(GRADLE_VERSION)/bin/gradle: $(LOCAL_PREBUILT_MODULE_FILE)
-	unzip -DD $< -d $(HOST_OUT)
+	unzip -f -u -DD $< -d $(HOST_OUT)
 
 include $(BUILD_PHONY_PACKAGE)
