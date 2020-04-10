@@ -21,21 +21,21 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := gradle-prebuilt
 LOCAL_IS_HOST_MODULE := true
-LOCAL_PREBUILT_MODULE_FILE := $(TOPDIR)tools/external/gradle/gradle-$(GRADLE_VERSION)-bin.zip
 
-LOCAL_ADDITIONAL_DEPENDENCIES := $(PRODUCT_OUT)/.gradle/init.gradle \
-	$(HOST_OUT)/gradle-$(GRADLE_VERSION)/bin/gradle
+LOCAL_PACKAGE_URL := https://services.gradle.org/distributions
+LOCAL_MODULE_ARCHIVE := $(OUT_DIR)/gradle-$(GRADLE_VERSION)-bin.zip
+LOCAL_MODULE_CONFIG := $(PRODUCT_OUT)/.gradle/init.gradle
 
-$(PRODUCT_OUT)/.gradle/init.gradle: $(LOCAL_PATH)/init.gradle
+LOCAL_ADDITIONAL_DEPENDENCIES = $(GRADLE_PATH) $(LOCAL_MODULE_CONFIG)
+
+$(LOCAL_MODULE_CONFIG): $(LOCAL_PATH)/init.gradle
 	install -d $(PRODUCT_OUT)/.gradle
-	install $(TOP_DIR)prebuilts/gradle/init.gradle $(PRODUCT_OUT)/.gradle/init.gradle
+	install $^ $@
 
-$(HOST_OUT)/gradle-$(GRADLE_VERSION)/bin/gradle: $(LOCAL_PREBUILT_MODULE_FILE)
-	unzip -f -u -DD $< -d $(HOST_OUT)
+$(GRADLE_PATH): $(LOCAL_MODULE_ARCHIVE)
+	unzip -u $< -d $(HOST_OUT)
+
+$(LOCAL_MODULE_ARCHIVE):
+	wget '$(LOCAL_PACKAGE_URL)/gradle-$(GRADLE_VERSION)-bin.zip' -O '$@'
 
 include $(BUILD_PHONY_PACKAGE)
-
-PACKAGE_URL := https://services.gradle.org/distributions
-
-$(TOPDIR)tools/external/gradle/gradle-$(GRADLE_VERSION)-bin.zip:
-	wget '$(PACKAGE_URL)/gradle-$(GRADLE_VERSION)-bin.zip' -O '$@'
