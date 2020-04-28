@@ -33,9 +33,13 @@ $(LOCAL_MODULE_CONFIG): $(LOCAL_PATH)/init.gradle
 	install $^ $@
 
 $(GRADLE_PATH): $(LOCAL_MODULE_ARCHIVE)
-	unzip -u $< -d $(HOST_OUT)
+	unzip -DD -u -o $< -d $(HOST_OUT)
+	touch $@
 
 $(LOCAL_MODULE_ARCHIVE):
 	wget '$(LOCAL_PACKAGE_URL)/gradle-$(GRADLE_VERSION)-bin.zip' -O '$@'
+	touch $@
 
 include $(BUILD_PHONY_PACKAGE)
+
+$(LOCAL_MODULE): $(GRADLE_PATH)
