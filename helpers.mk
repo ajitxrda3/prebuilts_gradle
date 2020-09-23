@@ -9,7 +9,7 @@ define gradle_build
 
 $(1):
 	mkdir -p $(GRADLE_GLOBAL_BUILD_PATH)
-	echo "sdk.dir = $(ANDROID_SDK_ROOT)" > $(2)/local.properties
+	grep -qF 'sdk.dir' $(2)/local.properties || echo "sdk.dir = $(ANDROID_SDK_ROOT)" >> $(2)/local.properties
 	GRADLE_GLOBAL_BUILD_PATH=$(GRADLE_GLOBAL_BUILD_PATH) \
 		$(GRADLE_PATH) -g $(GRADLE_HOME_PATH) --no-daemon -p $(2) $(3)
 
